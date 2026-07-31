@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('descripcion_accion');
             $table->foreignId('responsable_id')->constrained('users')->onDelete('cascade');
             $table->date('fecha_limite');
-            $table->enum('estado', ['Pendiente', 'En Proceso', 'Verificada', 'Rechazada', 'Vencida'])->default('Pendiente'); // RN-AC-03
+            $table->enum('estado', ['Pendiente', 'En Proceso', 'Verificada', 'Rechazada', 'Vencida'])->default('Pendiente');
             $table->foreignId('evidencia_cierre_id')->nullable()->constrained('evidencias')->onDelete('set null');
             $table->timestamps();
         });

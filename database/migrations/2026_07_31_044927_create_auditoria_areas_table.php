@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('requisitos_iso', function (Blueprint $table) {
+        Schema::create('auditoria_areas', function (Blueprint $table) {
             $table->id();
-            $table->enum('tipo', ['Clausula', 'Anexo A']); 
-            $table->string('codigo');
-            $table->string('categoria');
-            $table->string('titulo');
-            $table->text('descripcion');
-            $table->text('orientacion_implementacion')->nullable();
+            $table->foreignId('auditoria_id')->constrained('auditorias')->onDelete('cascade');
+            $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('requisito_isos');
+        Schema::dropIfExists('auditoria_areas');
     }
 };

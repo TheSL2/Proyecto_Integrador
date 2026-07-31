@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->text('objetivo')->nullable();
-            $table->text('alcance')->nullable(); 
-            $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');
+            $table->text('alcance')->nullable();
             $table->foreignId('auditor_lider_id')->nullable()->constrained('users')->onDelete('set null');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');

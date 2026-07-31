@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('auditoria_id')->constrained('auditorias')->onDelete('cascade');
             $table->foreignId('requisito_iso_id')->constrained('requisitos_iso')->onDelete('cascade');
             $table->enum('estado_cumplimiento', ['Conforme', 'No Conforme Mayor', 'No Conforme Menor', 'Oportunidad de Mejora', 'No Aplicable'])->default('No Aplicable');
-            $table->text('observaciones')->nullable(); // Justificación obligatoria si es "No Aplicable" (RN-CK-01)
+            $table->text('observaciones')->nullable();
             $table->timestamps();
         });
     }
