@@ -46,4 +46,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function areas(): HasMany
+    {
+        return $this->hasMany(Area::class, 'responsable_id');
+    }
+
+    public function auditoriasComoLider(): HasMany
+    {
+        return $this->hasMany(Auditoria::class, 'auditor_lider_id');
+    }
+
+    public function accionesCorrectivasAsignadas(): HasMany
+    {
+        return $this->hasMany(AccionCorrectiva::class, 'responsable_id');
+    }
 }
