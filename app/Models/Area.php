@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Area extends Model
 {
@@ -20,8 +19,8 @@ class Area extends Model
         return $this->belongsTo(User::class, 'responsable_id');
     }
 
-    public function auditorias(): HasMany
+    public function auditorias(): BelongsToMany
     {
-        return $this->hasMany(Auditoria::class);
+        return $this->belongsToMany(Auditoria::class, 'auditoria_areas');
     }
 }
