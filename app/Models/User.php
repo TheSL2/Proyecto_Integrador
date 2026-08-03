@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
     ];
 
     /**
@@ -60,5 +61,35 @@ class User extends Authenticatable
     public function accionesCorrectivasAsignadas(): HasMany
     {
         return $this->hasMany(AccionCorrectiva::class, 'responsable_id');
+    }
+
+    public function tieneRol(string $rol): bool
+    {
+        return $this->rol === $rol;
+    }
+
+    public function esAdmin(): bool
+    {
+        return $this->rol === 'Administrador del Sistema';
+    }
+
+    public function esConsultor(): bool
+    {
+        return $this->rol === 'Consultor';
+    }
+
+    public function esAuditor(): bool
+    {
+        return $this->rol === 'Auditor';
+    }
+
+    public function esAuditado(): bool
+    {
+        return $this->rol === 'Auditado';
+    }
+
+    public function esAltaDireccion(): bool
+    {
+        return $this->rol === 'Alta Dirección';
     }
 }

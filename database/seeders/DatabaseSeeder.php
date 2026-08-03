@@ -15,15 +15,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         $this->call([
             RequisitoIsoSeeder::class,
         ]);
+
+        User::create([
+            'name' => 'Admin SGSI',
+            'email' => 'admin@iso27001.com',
+            'password' => bcrypt('password123'),
+            'rol' => 'Administrador del Sistema',
+        ]);
+
+        User::create([
+            'name' => 'Consultor ISO',
+            'email' => 'consultor@iso27001.com',
+            'password' => bcrypt('password123'),
+            'rol' => 'Consultor',
+        ]);
+
+        User::create([
+            'name' => 'Auditor Líder',
+            'email' => 'auditor@iso27001.com',
+            'password' => bcrypt('password123'),
+            'rol' => 'Auditor',
+        ]);
+
+        User::create([
+            'name' => 'Auditado TI',
+            'email' => 'auditado@iso27001.com',
+            'password' => bcrypt('password123'),
+            'rol' => 'Auditado',
+        ]);
+
+        User::create([
+            'name' => 'Director General',
+            'email' => 'direccion@iso27001.com',
+            'password' => bcrypt('password123'),
+            'rol' => 'Alta Dirección',
+        ]);
+
     }
 }
