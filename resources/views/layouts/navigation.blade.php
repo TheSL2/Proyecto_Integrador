@@ -17,7 +17,10 @@
                     </x-nav-link>
 
                     <x-nav-link :href="route('areas.index')" :active="request()->routeIs('areas.*')">
-                        {{ __('Áreas / Procesos') }}
+                        {{ __('Áreas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('auditorias.index')" :active="request()->routeIs('auditorias.*')">
+                        {{ __('Auditorías') }}
                     </x-nav-link>
                 </div>
             </div>
