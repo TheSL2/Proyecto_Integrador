@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\AuditoriaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('areas', AreaController::class);
+
+    Route::resource('auditorias', AuditoriaController::class);
 });
 
 require __DIR__.'/auth.php';
