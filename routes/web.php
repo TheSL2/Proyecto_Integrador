@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuditoriaController;
+use App\Http\Controllers\ChecklistItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('areas', AreaController::class);
 
     Route::resource('auditorias', AuditoriaController::class);
+
+    Route::post('/auditorias/{auditoria}/checklist', [ChecklistItemController::class, 'store'])->name('checklist.store');
+    Route::delete('/checklist/{checklistItem}', [ChecklistItemController::class, 'destroy'])->name('checklist.destroy');
 });
 
 require __DIR__.'/auth.php';

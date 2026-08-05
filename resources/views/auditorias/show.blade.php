@@ -57,6 +57,130 @@
                 </div>
             </div>
 
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-b border-gray-200">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">
+                    Checklist de Evaluación ISO/IEC 27001:2022
+                </h3>
+
+                @if($errors->any())
+                    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-r">
+                        <ul class="list-disc pl-5 text-sm">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r text-sm">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('warning'))
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded-r text-sm">
+                        {{ session('warning') }}
+                    </div>
+                @endif
+
+                @can('ejecutar-auditoria', $auditoria)
+                    <form action="{{ route('checklist.store', $auditoria) }}" method="POST" class="bg-gray-50 p-4 rounded-md border mb-6">
+                        @csrf
+                        <h4 class="font-semibold text-gray-700 mb-3 text-sm uppercase">Registrar / Agregar Evaluación de Requisito</h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Requisito / Control ISO *</label>
+                                <select name="requisito_iso_id" required class="w-full border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="">-- Seleccionar Requisito --</option>
+                                    @foreach($requisitosIso as $req)
+                                        <option value="{{ $req->id }}">
+                                            [{{ $req->categoria }}] {{ $req->codigo }} - {{ Str::limit($req->descripcion, 60) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Estado de Cumplimiento *</label>
+                                <select name="estado_cumplimiento" required class="w-full border-gray-300 rounded-md shadow-sm text-sm">
+                                    <option value="Conforme">Conforme</option>
+                                    <option value="No Conforme Mayor">No Conforme Mayor</option>
+                                    <option value="No Conforme Menor">No Conforme Menor</option>
+                                    <option value="Oportunidad de Mejora">Oportunidad de Mejora</option>
+                                    <option value="No Aplicable">No Aplicable</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Observaciones / Justificación SoA
+                                <span class="text-xs text-gray-500 font-normal">(Obligatorio según RN-CHECK LIST-01 si el estado es "No Aplicable")</span>
+                            </label>
+                            <textarea name="observaciones" rows="2" class="w-full border-gray-300 rounded-md shadow-sm text-sm" placeholder="Ingrese las observaciones del hallazgo o la justificación técnica..."></textarea>
+                        </div>
+
+                        <div class="mt-4 text-right">
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md text-xs font-semibold uppercase hover:bg-blue-700">
+                                Guardar Evaluación
+                            </button>
+                        </div>
+                    </form>
+                @endcan
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 border text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase text-xs">Código</th>
+                                <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase text-xs">Requisito / Descripción</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-600 uppercase text-xs">Estado</th>
+                                <th class="px-4 py-3 text-left font-semibold text-gray-600 uppercase text-xs">Observaciones</th>
+                                <th class="px-4 py-3 text-right font-semibold text-gray-600 uppercase text-xs">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            @forelse($auditoria->checklistItems as $item)
+                                <tr>
+                                    <td class="px-4 py-3 font-bold text-gray-800 whitespace-nowrap">
+                                        {{ $item->requisitoIso->codigo }}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-600">
+                                        {{ $item->requisitoIso->descripcion }}
+                                    </td>
+                                    <td class="px-4 py-3 text-right whitespace-nowrap space-x-2">
+                                        @if(in_array($item->estado_cumplimiento, ['No Conforme Mayor', 'No Conforme Menor']))
+                                            <a href="{{ route('hallazgos.create', ['auditoria' => $auditoria->id, 'checklist' => $item->id]) }}" 
+                                            class="inline-block px-2 py-1 bg-red-600 text-white font-semibold text-xs rounded hover:bg-red-700 uppercase">
+                                                + Hallazgo
+                                            </a>
+                                        @endif
+
+                                        @can('ejecutar-auditoria', $auditoria)
+                                            <form action="{{ route('checklist.destroy', $item) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900 font-semibold text-xs uppercase" onclick="return confirm('¿Deseas eliminar esta evaluación?')">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+                                        No se han evaluado requisitos en esta auditoría aún.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </x-app-layout>

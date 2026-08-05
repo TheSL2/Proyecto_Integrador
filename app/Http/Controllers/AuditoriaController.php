@@ -6,6 +6,7 @@ use App\Models\Auditoria;
 use App\Models\Area;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\RequisitoIso;
 use Illuminate\Support\Facades\Gate;
 
 class AuditoriaController extends Controller
@@ -74,8 +75,11 @@ class AuditoriaController extends Controller
      */
     public function show(Auditoria $auditoria)
     {
-        $auditoria->load(['areas', 'auditorLider']);
-        return view('auditorias.show', compact('auditoria'));
+        $auditoria->load(['areas', 'auditorLider', 'checklistItems.requisitoIso']);
+    
+        $requisitosIso = RequisitoIso::all();
+
+        return view('auditorias.show', compact('auditoria', 'requisitosIso'));
     }
     /**
      * Show the form for editing the specified resource.
